@@ -141,8 +141,25 @@ When would you need this behavior? Honestly I have not had need for such behavio
 If you initialize a ReplaySubject with a buffer size of 1, then it actually behaves just like a BehaviorSubject. 
 The last value is always cached, so it acts like a value changing over time. 
 With this, there is no need for a null check like in the case of the BehaviorSubject initialized with a null, because no value is ever emitted to the subscriber until the first publishing.
-18.
-19.
+18.const name$ = this._personService.getName(id);
+const document$ = this._documentService.getDocument();
+
+combineLatest(name$, document$, (name, document) => ({name, document}))
+    .subscribe(pair => {
+           this.name = pair.name;
+           this.document = pair.document;
+           this.showForm();
+       })
+19.getMoviesDataByImdbIds(ids: number[]):Observable<IMovie[]> {
+    return Observable.of(...ids).flatMap( (id) => {
+      let params = new HttpParams().set('i',this.getIMDBIdString(id)).set('apikey', API_KEY);
+      return this.http.get(API_URL, {params}).map( data => {
+         return this.extractMovieData(data);
+      })
+   }).scan( (acc, movie) => {
+       return acc.concat(movie)
+   }, []);
+}
 
 Twilio:
 I have used Twilio Apis years ago, so I need to refresh my mind, but it won't a problem. 
